@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: ExpressionEvaluation
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Pawan-pc
+Implementation-Vendor-Id: org.evaluation.expression
+Build-Jdk: 1.8.0_191
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/ExpressionEvaluation
+Created-By: Maven Integration for Eclipse
+
