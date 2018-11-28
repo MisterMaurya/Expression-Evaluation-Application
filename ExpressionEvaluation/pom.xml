@@ -46,8 +46,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<!--swagger2 Dependency-->
+
+		<!--swagger2 Dependency -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -60,6 +60,22 @@
 			<version>2.6.1</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<!--Json Dependency -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.fathzer/javaluator -->
+		<dependency>
+			<groupId>com.fathzer</groupId>
+			<artifactId>javaluator</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
