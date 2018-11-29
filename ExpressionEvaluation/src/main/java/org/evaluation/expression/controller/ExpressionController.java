@@ -1,6 +1,9 @@
 package org.evaluation.expression.controller;
 
+import java.util.ArrayList;
+
 import org.evaluation.expression.constants.APIConstants;
+import org.evaluation.expression.constants.ExpressionConstants;
 import org.evaluation.expression.service.EvaluationService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+/**
+ * @author Pawan-Maurya
+ *
+ */
 
 @RestController
 @RequestMapping(value = APIConstants.REST_BASE_URL + APIConstants.REST_EVALUATE_URL)
@@ -24,7 +33,17 @@ public class ExpressionController {
 	@Autowired
 	private EvaluationService evaluationService;
 
-	@RequestMapping(method = RequestMethod.POST, produces = APIConstants.REST_JSON_CONTENT_TYPE)
+	// EVALUATE MATHEMATICS EXPRESSION USING EXTERNAL LIBRARY
+	// -------------------------------------------------------
+
+	/**
+	 * @param expression
+	 * @return evaluate expression result
+	 * @throws JSONException
+	 */
+
+	@ApiOperation(value = APIConstants.EVALUATE_EXPRESSION, notes = APIConstants.EXPRESSION_SOLVE_USING_API)
+	@RequestMapping(value = APIConstants.LIBRARY, method = RequestMethod.POST, produces = APIConstants.REST_JSON_CONTENT_TYPE)
 	public ResponseEntity<?> evaluateExpression(@RequestBody String expression) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
@@ -92,8 +111,71 @@ public class ExpressionController {
 			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 		}
 
-		jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.OPERATION_NOT_DECLARED);
-		return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
-
+		try {
+			jsonObject.put(APIConstants.RESULT, new DoubleEvaluator().evaluate(expression));
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+		} catch (Exception e) {
+			jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.OPERATION_NOT_DECLARED);
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+		}
 	}
+
+	// EVALUATE MATHEMATICS EXPRESSION Without EXTERNAL LIBRARY
+	// -------------------------------------------------------
+
+	/**
+	 * @param expression
+	 * @return evaluate expression result
+	 * @throws JSONException
+	 */
+
+	@ApiOperation(value = APIConstants.EXPRESSION_SOLVER, notes = APIConstants.EXPRESSION_WITHOUT_LIBRARY)
+	@RequestMapping(value = APIConstants.WITHOUT_LIBRARY, method = RequestMethod.POST, produces = APIConstants.REST_JSON_CONTENT_TYPE)
+	public ResponseEntity<?> expressionSolver(@RequestBody String expression) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		Double result = 0.0;
+
+		if (expression.startsWith(ExpressionConstants.SUM_START)
+				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
+			System.out.println("\n--------------- Addition Operation ------------------");
+			String actualExpression = evaluationService.getActualExpression(expression);
+			System.out.println("\n--------------- Actual Expression--------------------");
+			System.out.println(actualExpression);
+
+			ArrayList<String> expressionList = evaluationService.storeEachExpression(actualExpression);
+			if (expressionList == null) {
+				System.out.println("\nYou can not perform addition because your operation is break");
+				jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.CAN_NOT_PERFORM_OPERATION);
+				return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
+			}
+
+			for (String singleExpression : expressionList) {
+				try {
+					System.out.println("\nProcess to solve this expression : " + singleExpression);
+					System.out.println();
+					result = Double.sum(result, evaluationService.evaluate(singleExpression));
+				} catch (Exception e) {
+					jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.SYNTAX_ERROR);
+					return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+				}
+			}
+			System.out.println("\n\nAdditon Result : " + result);
+
+			jsonObject.put(APIConstants.RESULT, result.toString());
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+
+		}
+		if (expression.startsWith(ExpressionConstants.MAX_START)
+				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
+		}
+		if (expression.startsWith(ExpressionConstants.MIN_START)
+				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
+		}
+		if (expression.startsWith(ExpressionConstants.AVG_START)
+				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
+		}
+
+		return null;
+	}
+
 }
