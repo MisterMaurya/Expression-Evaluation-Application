@@ -24,18 +24,19 @@ public class EvaluationServiceImpl implements EvaluationService {
 
 	@Override
 	public ArrayList<String> storeEachExpression(String actualExpression) {
-		String pattern = ExpressionConstants.PATTERN;
+
 		String singleExpression[] = actualExpression.split(ExpressionConstants.EXPRESSION_SPLIT);
 		ArrayList<String> expressionList = new ArrayList<>();
 		System.out.println("\n\n------------ Expressions ----------------");
 		for (String expression : singleExpression) {
-			if (expression.matches(pattern)) {
-				expressionList.add(expression);
-				System.out.println(expression);
-			} else {
-				System.out.println(ExpressionConstants.PATTERN_ERROR + expression);
-				return null;
-			}
+			StringBuffer sb = new StringBuffer();
+			sb = sb.append(expression.replace("[[", "("));
+			String temp = sb.toString();
+			sb = new StringBuffer();
+			sb.append(temp.replace("]]", ")"));
+			expressionList.add(sb.toString());
+			System.out.println("-->" + sb);
+
 		}
 		return expressionList;
 	}
