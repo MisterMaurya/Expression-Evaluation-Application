@@ -32,10 +32,19 @@ public class EvaluationServiceImpl implements EvaluationService {
 			StringBuffer sb = new StringBuffer();
 			sb = sb.append(expression.replace("[[", "("));
 			String temp = sb.toString();
+			// System.out.println("1:" + temp);
 			sb = new StringBuffer();
 			sb.append(temp.replace("]]", ")"));
-			expressionList.add(sb.toString());
-			System.out.println("-->" + sb);
+			// System.out.println("2:" + temp);
+
+			sb = new StringBuffer();
+			sb = sb.append(temp.replace("(-", "(0-"));
+			temp = sb.toString();
+			if (temp.charAt(0) == '-')
+				temp = "0" + temp;
+
+			expressionList.add(temp);
+			System.out.println(temp);
 
 		}
 		return expressionList;
@@ -46,7 +55,7 @@ public class EvaluationServiceImpl implements EvaluationService {
 		char[] tokens = singleExpression.toCharArray();
 
 		// Stack for numbers: 'values'
-		Stack<Double> values = new Stack<Double>();
+		Stack<String> values = new Stack<String>();
 
 		// Stack for Operators: 'ops'
 		Stack<Character> ops = new Stack<Character>();
@@ -58,15 +67,15 @@ public class EvaluationServiceImpl implements EvaluationService {
 				continue;
 
 			// Current token is a number, push it to stack for numbers
-			if (tokens[i] >= '0' && tokens[i] <= '9') {
+			if (tokens[i] >= '0' && tokens[i] <= '9' || tokens[i] == '.') {
 				StringBuffer sbuf = new StringBuffer();
 
 				// There may be more than one digits in number
-				while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9')
+				while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9'
+						|| i < tokens.length && tokens[i] == '.')
 					sbuf.append(tokens[i++]);
 				i--;
-
-				pushValue(values, Double.parseDouble(sbuf.toString()));
+				pushValue(values, sbuf.toString());
 			}
 
 			// Current token is an opening brace, push it to 'ops'
@@ -82,7 +91,8 @@ public class EvaluationServiceImpl implements EvaluationService {
 				System.out.println("solve bracket");
 				while (ops.peek() != '(')
 
-					pushValue(values, applyOp(popOperator(ops), popValue(values), popValue(values)));
+					pushValue(values, applyOp(popOperator(ops), Double.valueOf((popValue(values))),
+							Double.valueOf((popValue(values)))).toString());
 				// values.push(applyOp(ops.pop(), values.pop(), values.pop()));
 
 				// ops.pop();
@@ -98,7 +108,8 @@ public class EvaluationServiceImpl implements EvaluationService {
 				while (!ops.empty() && hasPrecedence(tokens[i], ops.peek()))
 
 					// values.push(applyOp(ops.pop(), values.pop(), values.pop()));
-					pushValue(values, applyOp(popOperator(ops), popValue(values), popValue(values)));
+					pushValue(values, applyOp(popOperator(ops), Double.valueOf((popValue(values))),
+							Double.valueOf((popValue(values)))).toString());
 
 				// Push current token to 'ops'.
 
@@ -111,10 +122,11 @@ public class EvaluationServiceImpl implements EvaluationService {
 		// Entire expression has been parsed at this point, apply remaining
 		// ops to remaining values
 		while (!ops.empty())
-			pushValue(values, applyOp(popOperator(ops), popValue(values), popValue(values)));
-
+			pushValue(values,
+					applyOp(popOperator(ops), Double.valueOf((popValue(values))), Double.valueOf((popValue(values))))
+							.toString());
 		// Top of 'values' contains result, return it
-		return popValue(values);
+		return Double.valueOf(popValue(values));
 	}
 
 	@Override
@@ -152,8 +164,8 @@ public class EvaluationServiceImpl implements EvaluationService {
 		return 0.0;
 	}
 
-	private Double popValue(Stack<Double> values) {
-		Double val = values.pop();
+	private String popValue(Stack<String> values) {
+		String val = values.pop();
 		System.out.println("Value Pop In Value Stack     " + val.toString());
 		return val;
 	}
@@ -164,8 +176,8 @@ public class EvaluationServiceImpl implements EvaluationService {
 		return val;
 	}
 
-	private Double pushValue(Stack<Double> values, Double value) {
-		Double val = values.push(value);
+	private String pushValue(Stack<String> values, String value) {
+		String val = values.push(value);
 		System.out.println("Value Push In Value Stack    " + val.toString());
 		return val;
 	}

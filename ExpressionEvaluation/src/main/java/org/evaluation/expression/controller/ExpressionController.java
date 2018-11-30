@@ -134,6 +134,7 @@ public class ExpressionController {
 	public ResponseEntity<?> expressionSolver(@RequestBody String expression) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 		Double result = 0.0;
+		int counter = 0;
 
 		if (expression.startsWith(ExpressionConstants.SUM_START)
 				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
@@ -155,6 +156,7 @@ public class ExpressionController {
 					System.out.println();
 					result = Double.sum(result, evaluationService.evaluate(singleExpression));
 				} catch (Exception e) {
+					e.printStackTrace();
 					jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.SYNTAX_ERROR);
 					return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 				}
@@ -167,15 +169,114 @@ public class ExpressionController {
 		}
 		if (expression.startsWith(ExpressionConstants.MAX_START)
 				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
+
+			System.out.println("\n--------------- Max Value Operation ------------------");
+			String actualExpression = evaluationService.getActualExpression(expression);
+			System.out.println("\n--------------- Actual Expression--------------------");
+			System.out.println(actualExpression);
+
+			ArrayList<String> expressionList = evaluationService.storeEachExpression(actualExpression);
+			if (expressionList == null) {
+				System.out.println("\nYou can not perform addition because your operation is break");
+				jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.CAN_NOT_PERFORM_OPERATION);
+				return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
+			}
+
+			for (String singleExpression : expressionList) {
+
+				try {
+					System.out.println("\nProcess to solve this expression : " + singleExpression);
+					System.out.println();
+					if (counter == 0) {
+						result = evaluationService.evaluate(singleExpression);
+					}
+
+					result = Math.max(result, evaluationService.evaluate(singleExpression));
+				} catch (Exception e) {
+					e.printStackTrace();
+					jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.SYNTAX_ERROR);
+					return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+				}
+				counter++;
+			}
+			System.out.println("\n\nMax Value Result : " + result);
+
+			jsonObject.put(APIConstants.RESULT, result.toString());
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+
 		}
 		if (expression.startsWith(ExpressionConstants.MIN_START)
 				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
+			System.out.println("\n--------------- Min Value Operation ------------------");
+			String actualExpression = evaluationService.getActualExpression(expression);
+			System.out.println("\n--------------- Actual Expression--------------------");
+			System.out.println(actualExpression);
+
+			ArrayList<String> expressionList = evaluationService.storeEachExpression(actualExpression);
+			if (expressionList == null) {
+				System.out.println("\nYou can not perform addition because your operation is break");
+				jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.CAN_NOT_PERFORM_OPERATION);
+				return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
+			}
+
+			for (String singleExpression : expressionList) {
+
+				try {
+					System.out.println("\nProcess to solve this expression : " + singleExpression);
+					System.out.println();
+					if (counter == 0) {
+						result = evaluationService.evaluate(singleExpression);
+					}
+
+					result = Math.min(result, evaluationService.evaluate(singleExpression));
+				} catch (Exception e) {
+					e.printStackTrace();
+					jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.SYNTAX_ERROR);
+					return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+				}
+				counter++;
+			}
+			System.out.println("\n\nMin Value Result : " + result);
+
+			jsonObject.put(APIConstants.RESULT, result.toString());
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 		}
 		if (expression.startsWith(ExpressionConstants.AVG_START)
 				&& (expression.endsWith(ExpressionConstants.END_WITH))) {
+
+			System.out.println("\n--------------- Average Operation ------------------");
+			String actualExpression = evaluationService.getActualExpression(expression);
+			System.out.println("\n--------------- Actual Expression--------------------");
+			System.out.println(actualExpression);
+
+			ArrayList<String> expressionList = evaluationService.storeEachExpression(actualExpression);
+			if (expressionList == null) {
+				System.out.println("\nYou can not perform addition because your operation is break");
+				jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.CAN_NOT_PERFORM_OPERATION);
+				return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
+			}
+
+			for (String singleExpression : expressionList) {
+				try {
+					System.out.println("\nProcess to solve this expression : " + singleExpression);
+					System.out.println();
+					result = Double.sum(result, evaluationService.evaluate(singleExpression));
+				} catch (Exception e) {
+					e.printStackTrace();
+					jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.SYNTAX_ERROR);
+					return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+				}
+				counter++;
+			}
+			System.out.println("\n\nAverage Result : " + ((counter == 1) ? result : result / counter));
+
+			jsonObject.put(APIConstants.RESULT, result.toString());
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+
 		}
 
-		return null;
+		jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.OPERATION_NOT_DECLARED);
+		return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 	}
 
 }
