@@ -24,6 +24,8 @@ public class EvaluationServiceImpl implements EvaluationService {
 
 	@Override
 	public ArrayList<String> storeEachExpression(String actualExpression) {
+		if (actualExpression.length() == 0)
+			return null;
 
 		String singleExpression[] = actualExpression.split(ExpressionConstants.EXPRESSION_SPLIT);
 		ArrayList<String> expressionList = new ArrayList<>();
@@ -36,7 +38,7 @@ public class EvaluationServiceImpl implements EvaluationService {
 			sb = new StringBuffer();
 			sb.append(temp.replace("]]", ")"));
 			// System.out.println("2:" + temp);
-
+			temp = sb.toString();
 			sb = new StringBuffer();
 			sb = sb.append(temp.replace("(-", "(0-"));
 			temp = sb.toString();
