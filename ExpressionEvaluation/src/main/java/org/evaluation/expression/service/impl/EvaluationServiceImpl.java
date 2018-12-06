@@ -24,13 +24,14 @@ public class EvaluationServiceImpl implements EvaluationService {
 
 	@Override
 	public ArrayList<String> storeEachExpression(String actualExpression) {
-		if (actualExpression.length() == 0)
+		if (actualExpression.length() == 0 || actualExpression.contains("()"))
 			return null;
 
 		String singleExpression[] = actualExpression.split(ExpressionConstants.EXPRESSION_SPLIT);
 		ArrayList<String> expressionList = new ArrayList<>();
-		System.out.println("\n\n------------ Expressions ----------------");
+
 		for (String expression : singleExpression) {
+
 			StringBuffer sb = new StringBuffer();
 			sb = sb.append(expression.replace("[[", "("));
 			String temp = sb.toString();
@@ -46,6 +47,7 @@ public class EvaluationServiceImpl implements EvaluationService {
 				temp = "0" + temp;
 
 			expressionList.add(temp);
+			System.out.println("\n\n------------ Expressions ----------------");
 			System.out.println(temp);
 
 		}

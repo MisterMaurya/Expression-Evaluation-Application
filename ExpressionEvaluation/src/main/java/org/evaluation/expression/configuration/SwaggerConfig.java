@@ -18,8 +18,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 	private static final String SWAGGER_API_VERSION = "1.0";
 	private static final String LICENSE_TEXT = "License";
-	private static final String TITLE = "Expression Evaluation RESTFul API";
-	private static final String DESCRIPTION = "RESTful APIs for Expression Evaluation Algorithm";
+	/*
+	 * private static final String TITLE = "Expression Evaluation RESTFul API";
+	 * private static final String DESCRIPTION =
+	 * "RESTful APIs for Expression Evaluation Algorithm";
+	 */
+
+	private static final String TITLE = "Todos Operation RESTFul API";
+	private static final String DESCRIPTION = "RESTful APIs for Todos";
+
 	public static final Contact DEFAULT_CONTACT = new Contact("Pawan Maurya", "http://github.com/mistermaurya",
 			"pawank@thelattice.in");
 
@@ -31,7 +38,8 @@ public class SwaggerConfig {
 	@Bean
 	public Docket bostonApi() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
-				.tags(new Tag(APIConstants.EXPRESSION_EVALUATION_TAG, APIConstants.EXPRESSION_CONTROLLER_DESCRIPTION))
+				.tags(new Tag(APIConstants.EXPRESSION_EVALUATION_TAG, APIConstants.EXPRESSION_CONTROLLER_DESCRIPTION),
+						new Tag(APIConstants.TODOS_TAG, APIConstants.TODOS_CONTROLLER_DESCRIPTION))
 				.select().apis(RequestHandlerSelectors.basePackage("org.evaluation.expression")).build();
 	}
 

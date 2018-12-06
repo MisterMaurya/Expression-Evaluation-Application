@@ -12,6 +12,7 @@ public class APIConstants {
 	public static final String EXPRESSION_EVALUATION_TAG = "EXPRESSION CONTROLLER APIs";
 	public static final String EXPRESSION_CONTROLLER_DESCRIPTION = "OPERATIONS PERTAINING TO EXPRESSION EVALUATION";
 
+	public static final String TODOS_TAG = "TODOS CONTROLLER APIs";
 	// API CONTENT TYPE
 	public static final String REST_JSON_CONTENT_TYPE = "application/json";
 	public static final String RESULT = "result";
@@ -24,4 +25,20 @@ public class APIConstants {
 	public static final String EXPRESSION_WITHOUT_LIBRARY = "expression solve without api";
 	public static final String CAN_NOT_PERFORM_OPERATION = "you can not perform operation because of syntax";
 
+	public static final String REST_BASE_TODOS_URL = "/todos";
+	public static final String CONTENT_CAN_NOT_EMPTY = "content can not empty";
+	public static final String STATUS = "status";
+	public static final String TODOS_ADD_SUCCESSFULLY = "Todos add successfully";
+
+	public static final String TODOS_CONTROLLER_DESCRIPTION = "OPERATIONS PERTAINING TO TODOS";
+	public static final String REST_PATH_ID = "/{id}";
+	public static final String TODOS_NOT_EXISIS = "Please enter a valid id";
+	public static final String ADD_TODOS = "Create a Todos";
+	public static final String GET_A_TODOS = "Get a todos";
+	public static final String DELETE_A_TODOS = "Delete a todos";
+	public static final String TODOS_DELETE_SUCCESSFULLY = "todos delete successfully";
+	public static final String UPDATE_A_TODOS = "Update a todos";
+	public static final String TODOS_UPDATE_SUCCESSFULLY = "todos update successfully";
+	public static final String TODOS_LIST = "/list";
+	public static final String GET_ALL_TODOS = "Get All Todos";
 }
