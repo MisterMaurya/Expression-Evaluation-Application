@@ -39,7 +39,8 @@ public class SwaggerConfig {
 	public Docket bostonApi() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
 				.tags(new Tag(APIConstants.EXPRESSION_EVALUATION_TAG, APIConstants.EXPRESSION_CONTROLLER_DESCRIPTION),
-						new Tag(APIConstants.TODOS_TAG, APIConstants.TODOS_CONTROLLER_DESCRIPTION))
+						new Tag(APIConstants.TODOS_TAG, APIConstants.TODOS_CONTROLLER_DESCRIPTION),
+						new Tag(APIConstants.DIGITAL_CHANGER_TAG, APIConstants.DIGITAL_CONTROLLER_DESCRIPTION))
 				.select().apis(RequestHandlerSelectors.basePackage("org.evaluation.expression")).build();
 	}
 

@@ -111,6 +111,9 @@ public class TodosController {
 	@ApiOperation(value = APIConstants.UPDATE_A_TODOS)
 	@RequestMapping(value = APIConstants.REST_PATH_ID, method = RequestMethod.PUT, produces = APIConstants.REST_JSON_CONTENT_TYPE)
 	public ResponseEntity<?> updateTodos(@PathVariable Long id, @RequestBody String content) throws JSONException {
+
+		System.out.println(content);
+
 		JSONObject jsonObject = new JSONObject();
 		boolean isTodosExists = todosService.existsById(id);
 

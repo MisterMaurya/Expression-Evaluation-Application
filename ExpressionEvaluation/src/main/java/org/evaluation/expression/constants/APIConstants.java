@@ -41,4 +41,8 @@ public class APIConstants {
 	public static final String TODOS_UPDATE_SUCCESSFULLY = "todos update successfully";
 	public static final String TODOS_LIST = "/list";
 	public static final String GET_ALL_TODOS = "Get All Todos";
+	public static final String REST_DIGITAL_CHANGER = "/digital/changer";
+	public static final String DIGITAL_CHANGER_TAG = "DIGITAL CHANGER CONTROLLER APIs";
+	public static final String DIGITAL_CONTROLLER_DESCRIPTION = "OPERATIONS PERTAINING TO DIGITAL CHANGER";
+
 }
