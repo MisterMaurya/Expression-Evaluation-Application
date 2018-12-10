@@ -44,5 +44,10 @@ public class APIConstants {
 	public static final String REST_DIGITAL_CHANGER = "/digital/changer";
 	public static final String DIGITAL_CHANGER_TAG = "DIGITAL CHANGER CONTROLLER APIs";
 	public static final String DIGITAL_CONTROLLER_DESCRIPTION = "OPERATIONS PERTAINING TO DIGITAL CHANGER";
+	public static final String CHANGE_DIGITAL_TO_NUMERIC = "Change digital to numeric";
+	public static final String INVALID_INPUT_FILE_PATH = "invalid input file path";
+	public static final String SOMETHING_WENT_WRONG = "something went wrong during file read";
+	public static final String OUTPUT_FILE_SUCCESSFULLY_CREATED = "output file successfully created";
+	public static final String INVALID_OUTPUT_FILE_PATH = "invalid output file path";
 
 }
