@@ -2,6 +2,7 @@ package org.evaluation.expression.controller;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,9 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -34,19 +35,21 @@ public class DigitalChangerController {
 
 	/**
 	 * @param inputFilePath
+	 * @param outputFilePath
 	 * @return Response code 200 if output file successfully generated
 	 * @throws JSONException
 	 */
-
 	@SuppressWarnings("resource")
 	@ApiOperation(value = APIConstants.CHANGE_DIGITAL_TO_NUMERIC)
 	@RequestMapping(method = RequestMethod.POST, produces = APIConstants.REST_JSON_CONTENT_TYPE)
-	public ResponseEntity<?> changeDigitalToNumeric(@RequestBody String inputFilePath) throws JSONException {
+
+	public ResponseEntity<?> changeDigitalToNumeric(@RequestParam String inputFilePath,
+			@RequestParam String outputFilePath) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
 		// split String add in this list
-		ArrayList<String> splitSubString = new ArrayList<>();
+		ArrayList<String> splitSubStringList = new ArrayList<>();
 
 		BufferedReader br = null;
 		try {
@@ -62,7 +65,7 @@ public class DigitalChangerController {
 					for (int i = 0; i < subStrings.length; i++) {
 
 						// add split character substring in list
-						splitSubString.add(subStrings[i]);
+						splitSubStringList.add(subStrings[i]);
 					}
 				}
 			} catch (IOException e1) {
@@ -80,15 +83,18 @@ public class DigitalChangerController {
 
 		// store every number in a line
 		String num = "";
-		String temp;
-		ArrayList<String> aList = new ArrayList<>();
 
-		for (int i1 = 0; i1 < splitSubString.size(); i1++) {
+		// combine split SubString
+		String makeDigit;
+
+		ArrayList<String> numberList = new ArrayList<>();
+
+		for (int i1 = 0; i1 < splitSubStringList.size(); i1++) {
 
 			try {
-				temp = splitSubString.get(i1) + "\n" + splitSubString.get(i1 + 9) + "\n"
-						+ splitSubString.get(i1 + 2 * 9);
-				switch (temp) {
+				makeDigit = splitSubStringList.get(i1) + "\n" + splitSubStringList.get(i1 + 9) + "\n"
+						+ splitSubStringList.get(i1 + 2 * 9);
+				switch (makeDigit) {
 				case DigitalChangerConstants.ZERO:
 					num = num + 0;
 					break;
@@ -128,37 +134,47 @@ public class DigitalChangerController {
 			}
 
 			if (num.length() == 9) {
-				aList.add(num);
+				numberList.add(num);
 				num = "";
 			}
 
 		}
 
 		FileWriter writer = null;
+		File file = null;
 		try {
-			writer = new FileWriter("C:\\Users\\Pawan-pc\\Desktop\\o2.txt");
+
+			writer = new FileWriter(outputFilePath);
+
+			// use to get output file path
+			file = new File(outputFilePath);
+
 		} catch (IOException e) {
-			e.printStackTrace();
+			jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.INVALID_OUTPUT_FILE_PATH);
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+
 		}
 
 		BufferedWriter buffer = new BufferedWriter(writer);
 
-		for (String string1 : aList) {
+		for (String number : numberList) {
 			try {
-				buffer.write(string1 + "\n");
+				buffer.write(number + "\n");
 			} catch (IOException e) {
-				e.printStackTrace();
+				jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.IO_EXCEPTION);
+				return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 			}
 		}
 
 		try {
 			buffer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			jsonObject.put(APIConstants.RESPONSE_ERROR, APIConstants.IO_EXCEPTION);
+			return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 		}
 
 		jsonObject.put(APIConstants.STATUS, APIConstants.OUTPUT_FILE_SUCCESSFULLY_CREATED);
+		jsonObject.put(APIConstants.FILE_PATH, file.getAbsolutePath());
 		return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 
 	}

@@ -49,5 +49,7 @@ public class APIConstants {
 	public static final String SOMETHING_WENT_WRONG = "something went wrong during file read";
 	public static final String OUTPUT_FILE_SUCCESSFULLY_CREATED = "output file successfully created";
 	public static final String INVALID_OUTPUT_FILE_PATH = "invalid output file path";
+	public static final String IO_EXCEPTION = "Signals that an I/O exception of some sort has occurred";
+	public static final String FILE_PATH = "file_path";
 
 }
